@@ -15,6 +15,7 @@ public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
 

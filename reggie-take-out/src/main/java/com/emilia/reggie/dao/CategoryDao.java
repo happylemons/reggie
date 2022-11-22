@@ -15,4 +15,8 @@ public interface CategoryDao {
     void delete(Long id);
 
     void update(Category category);
+
+    List<Category> list(Integer type);
+
+    Category findById(Long categoryId);
 }

@@ -80,4 +80,10 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> findAll() {
         return categoryDao.findAll();
     }
+
+    @Override
+    public R<List<Category>> list(Integer type) {
+        List<Category> categories = categoryDao.list(type);
+        return R.success(categories);
+    }
 }

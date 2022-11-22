@@ -8,4 +8,65 @@
     <select id="findById" resultType="java.lang.Integer">
         select COUNT(*) from dish where category_id = #{id}
     </select>
+
+    <!-- useGeneratedKeys="true" keyColumn="id" keyProperty="id" 通知mybatis插入数据之后, 主键封装回对象
+    keyColumn  主键列名
+    keyProperty  主键的属性名
+    -->
+    <insert id="addDish" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into dish values (null,#{name},#{categoryId},#{price},#{code},#{image},#{description},#{status},#{sort},#{createTime}
+        ,#{updateTime},#{createUser},#{updateUser},0);
+    </insert>
+
+    <select id="findByName" resultType="com.emilia.reggie.model.entity.Dish">
+        select * from dish
+        <where>
+            <if test="name != null and name !=''">
+                name like concat('%',name,'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findByIdToPojo" resultType="com.emilia.reggie.model.entity.Dish">
+        select * from dish where id = #{id}
+    </select>
+    <update id="updateDish">
+        update dish
+        <set>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="categoryId!=null">
+                category_id=#{categoryId},
+            </if>
+            <if test="price!=null">
+                price=#{price},
+            </if>
+            <if test="code!=null and code!=''">
+                code=#{code},
+            </if>
+            <if test="image!=null and image!=''">
+                image=#{image},
+            </if>
+            <if test="description!=null and description!=''">
+                description=#{description},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="sort!=null">
+                sort=#{sort},
+            </if>
+            <if test="updateTime!=null">
+                update_time=#{updateTime},
+            </if>
+            <if test="updateUser!=null">
+                update_user=#{updateUser},
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
 </mapper>

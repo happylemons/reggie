@@ -20,5 +20,6 @@ mybatis-plus:
 #  helper-dialect: mysql
 #  reasonable: true
 
-
+reggie:
+  path: D:\Java\imgs\
 

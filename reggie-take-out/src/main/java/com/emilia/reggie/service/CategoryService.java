@@ -17,4 +17,6 @@ public interface CategoryService {
     void update(Category category);
 
     List<Category> findAll();
+
+    R<List<Category>> list(Integer type);
 }

@@ -24,4 +24,18 @@
         update category set name=#{name},sort=#{sort},update_time=#{updateTime},update_user=#{updateUser} where id=#{id}
     </update>
 
+    <select id="list" resultType="com.emilia.reggie.model.entity.Category">
+        select * from category
+        <where>
+            <if test="type!=null">
+                type=#{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultType="com.emilia.reggie.model.entity.Category">
+        select * from category where id =#{categoryId}
+    </select>
+
+
 </mapper>

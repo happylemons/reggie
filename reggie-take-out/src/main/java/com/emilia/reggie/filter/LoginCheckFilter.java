@@ -29,7 +29,7 @@ public class LoginCheckFilter implements Filter {
         String requestURI = req.getRequestURI();
 
         //3.白名单,无需登录也可以访问的静态页面
-        String[] uris = {"/backend/**", "/front/**", "/employee/login"};
+        String[] uris = {"/backend/**", "/front/**", "/employee/login","/common/**"};
 
         boolean match = checkUri(requestURI, uris);
         if (match) {
