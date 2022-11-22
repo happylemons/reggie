@@ -1,0 +1,24 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://129.204.205.29:3306/reggie?useSSL=false
+      username: root
+      password: Xiao#1996
+      db-type: com.alibaba.druid.pool.DruidDataSource
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mappers/*.xml
+
+#page helper:
+#  helper-dialect: mysql
+#  reasonable: true
+
+
+
