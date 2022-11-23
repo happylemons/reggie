@@ -126,4 +126,5 @@ public class CategoryController {
 
         return categoryService.list(type);
     }
+
 }

@@ -2,10 +2,45 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.emilia.reggie.dao.SetmealDao">
-
+<mapper namespace="com.emilia.reggie.dao.SetMealDao">
 
     <select id="findById" resultType="java.lang.Integer">
         select COUNT(*) from setmeal where category_id = #{id}
     </select>
+
+    <insert id="add" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into setmeal values
+            (null, #{categoryId}, #{name}, #{price}, #{status}, #{code}, #{description}, #{image}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser},#{isDeleted});
+    </insert>
+
+    <select id="findByName" resultType="com.emilia.reggie.model.entity.SetMeal">
+        select * from setmeal <where>
+        <if test="name != null and name != ''">
+            name like concat('%',#{name},'%')
+        </if>
+    </where>
+    </select>
+
+    <sql id="ids">
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </sql>
+
+    <select id="findByIds" resultType="java.lang.Long">
+        select count(*) from setmeal where status = 1 and id in
+            <include refid="ids"/>
+    </select>
+
+    <delete id="delete">
+        delete from setmeal where id in
+            <include refid="ids"/>
+    </delete>
+
+    <update id="updateStatusByIds">
+        update setmeal set status=#{status} where id in
+            <include refid="ids"/>
+    </update>
+
+
 </mapper>

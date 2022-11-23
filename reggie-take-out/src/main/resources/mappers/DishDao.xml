@@ -4,9 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.emilia.reggie.dao.DishDao">
 
-
-    <select id="findById" resultType="java.lang.Integer">
-        select COUNT(*) from dish where category_id = #{id}
+    <select id="findByCategoryId" resultType="com.emilia.reggie.model.entity.Dish">
+        select * from dish where category_id = #{id}
     </select>
 
     <!-- useGeneratedKeys="true" keyColumn="id" keyProperty="id" 通知mybatis插入数据之后, 主键封装回对象
@@ -22,7 +21,7 @@
         select * from dish
         <where>
             <if test="name != null and name !=''">
-                name like concat('%',name,'%')
+                name like concat('%',#{name},'%')
             </if>
         </where>
     </select>
@@ -30,6 +29,7 @@
     <select id="findByIdToPojo" resultType="com.emilia.reggie.model.entity.Dish">
         select * from dish where id = #{id}
     </select>
+
     <update id="updateDish">
         update dish
         <set>

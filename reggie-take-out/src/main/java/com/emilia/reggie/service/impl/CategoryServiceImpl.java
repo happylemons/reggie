@@ -3,10 +3,11 @@ package com.emilia.reggie.service.impl;
 import com.emilia.reggie.common.R;
 import com.emilia.reggie.dao.CategoryDao;
 import com.emilia.reggie.dao.DishDao;
-import com.emilia.reggie.dao.SetmealDao;
+import com.emilia.reggie.dao.SetMealDao;
 import com.emilia.reggie.exception.NameExistsException;
 import com.emilia.reggie.exception.CustomerRelationException;
 import com.emilia.reggie.model.entity.Category;
+import com.emilia.reggie.model.entity.Dish;
 import com.emilia.reggie.model.entity.Page;
 import com.emilia.reggie.service.CategoryService;
 import com.github.pagehelper.PageHelper;
@@ -29,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     private DishDao dishDao;
 
     @Autowired(required = false)
-    private SetmealDao setmealDao;
+    private SetMealDao setmealDao;
 
     @Override
     public Integer add(Category category) {
@@ -56,13 +57,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
-        Integer dishCount = dishDao.findById(id);
-        if (dishCount > 0) {
+        List<Dish> dish = dishDao.findByCategoryId(id);
+        if (dish != null) {
             throw new CustomerRelationException("该类别已经被菜品关联,删除失败!");
         }
 
-        Integer setmealCount = setmealDao.findById(id);
-        if (setmealCount > 0) {
+        Integer setMealCount = setmealDao.findById(id);
+        if (setMealCount > 0) {
             throw new CustomerRelationException("该套餐已经被菜品关联,删除失败!");
         }
 

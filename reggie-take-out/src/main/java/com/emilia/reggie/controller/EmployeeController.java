@@ -35,7 +35,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public R add(@RequestBody  Employee employee, HttpSession session) {
+    public R add(@RequestBody Employee employee, HttpSession session) {
         //缺少字段 service:password status create_time update_time
         // controller: 设置 create_user update_user
         Long employeeId = (Long) session.getAttribute("employeeId");
@@ -47,7 +47,7 @@ public class EmployeeController {
     }
 
     @GetMapping("page")
-    public R page(  @RequestParam(defaultValue = "1") Integer page,
+    public R page(@RequestParam(defaultValue = "1") Integer page,
                   @RequestParam(defaultValue = "10") Integer pageSize,
                   String name) {
         return employeeService.findByPage(page, pageSize, name);

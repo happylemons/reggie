@@ -1,6 +1,7 @@
 package com.emilia.reggie.controller;
 
 import com.emilia.reggie.common.R;
+import com.emilia.reggie.model.entity.Dish;
 import com.emilia.reggie.model.entity.Page;
 import com.emilia.reggie.model.vo.DishVo;
 import com.emilia.reggie.service.DishService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("dish")
@@ -39,15 +41,19 @@ public class DishController {
     }
 
     @PutMapping
-    public R updateDish(@RequestBody DishVo dishVo, HttpSession session){
+    public R updateDish(@RequestBody DishVo dishVo, HttpSession session) {
 
         Long empId = (Long) session.getAttribute("employee");
-
-        //2. 补全更新人
+        //2. 补全
         dishVo.setUpdateUser(empId);
-        //3.交给service保存信息
+
         dishService.update(dishVo);
         //4. 返回结果
-        return R.success("更新菜品成功");
+        return R.success("修改成功");
+    }
+
+    @GetMapping("list")
+    public R<List<Dish>> list(Long categoryId) {
+        return dishService.findByCategoryId(categoryId);
     }
 }

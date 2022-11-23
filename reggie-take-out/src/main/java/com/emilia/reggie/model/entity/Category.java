@@ -4,16 +4,14 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * 分类
  */
 @Data
-public class Category implements Serializable {
+public class Category {
 
-    private static final long serialVersionUID = 1L;
 
     //@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
