@@ -3,7 +3,7 @@ package com.emilia.reggie.model.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
-import java.io.Serializable;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -11,15 +11,14 @@ import java.time.LocalDateTime;
  * 套餐菜品关系
  */
 @Data
-public class SetmealDish implements Serializable {
+public class SetMealDish {
 
-    private static final long serialVersionUID = 1L;
 
     private Long id;
 
 
     //套餐id
-    private Long setmealId;
+    private Long setMealId;
 
 
     //菜品id

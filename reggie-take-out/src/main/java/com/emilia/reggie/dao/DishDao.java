@@ -8,7 +8,7 @@ import java.util.List;
 public interface DishDao {
 
 
-    Integer findById(Long id);
+    List<Dish> findByCategoryId(Long id);
 
     void addDish(Dish dish);
 

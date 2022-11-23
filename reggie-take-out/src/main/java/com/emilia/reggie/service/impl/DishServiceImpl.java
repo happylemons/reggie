@@ -55,8 +55,9 @@ public class DishServiceImpl implements DishService {
                 dishVo.getCreateUser(),
                 dishVo.getUpdateUser());
 
-        dishDao.addDish(dish);
+//        BeanUtils.copyProperties(dishVo,dish);
 
+        dishDao.addDish(dish);
 
         ArrayList<DishFlavor> dishFlavors = new ArrayList<>();
         List<DishFlavorVo> flavorVos = dishVo.getFlavors();
@@ -115,11 +116,12 @@ public class DishServiceImpl implements DishService {
     @Override
     public void update(DishVo dishVo) {
         Dish dish = new Dish();
-        dish.setName(dishVo.getName());
-        dish.setCategoryId(dishVo.getCategoryId());
-        dish.setCode(dishVo.getCode());
-        dish.setImage(dishVo.getImage());
-        dish.setDescription(dishVo.getDescription());
+        BeanUtils.copyProperties(dishVo, dish);
+//        dish.setName(dishVo.getName());
+//        dish.setCategoryId(dishVo.getCategoryId());
+//        dish.setCode(dishVo.getCode());
+//        dish.setImage(dishVo.getImage());
+//        dish.setDescription(dishVo.getDescription());
         dish.setUpdateTime(LocalDateTime.now());
         dishDao.updateDish(dish);
 
@@ -138,6 +140,13 @@ public class DishServiceImpl implements DishService {
             dishFlavors.add(dishFlavor);
         }
         dishFlavorDao.addDishFlavor(dishFlavors);
+    }
+
+    @Override
+    public R<List<Dish>> findByCategoryId(Long categoryId) {
+        List<Dish> dishes = dishDao.findByCategoryId(categoryId);
+        return R.success(dishes);
+
     }
 }
 

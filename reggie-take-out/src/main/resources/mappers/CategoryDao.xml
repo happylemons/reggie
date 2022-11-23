@@ -13,9 +13,11 @@
     <select id="findByName" resultType="com.emilia.reggie.model.entity.Category">
         select * from category where name = #{name}
     </select>
+
     <select id="findAll" resultType="com.emilia.reggie.model.entity.Category">
         select * from category
     </select>
+
     <delete id="delete">
         delete from category where id =#{id}
     </delete>

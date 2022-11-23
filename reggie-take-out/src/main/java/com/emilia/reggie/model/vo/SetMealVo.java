@@ -1,56 +1,38 @@
-package com.emilia.reggie.model.entity;
+package com.emilia.reggie.model.vo;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.emilia.reggie.model.entity.SetMealDish;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 套餐
  */
 @Data
-public class SetMeal{
-
-    private Long id;
+public class SetMealVo {
 
 
-    //分类id
-    private Long categoryId;
-
+    //套餐分类
+    private String categoryId;
 
     //套餐名称
     private String name;
 
-
     //套餐价格
     private BigDecimal price;
 
+    private List<SetMealDish> setmealDishes;
 
-    //状态 0:停用 1:启用
-    private Integer status;
-
-
-    //编码
-    private String code;
-
+    private String categoryName;
 
     //描述信息
     private String description;
 
-
     //图片
     private String image;
-
-
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
-
 
     @TableField(fill = FieldFill.INSERT)
     private Long createUser;
@@ -58,8 +40,5 @@ public class SetMeal{
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
-
-    //是否删除
-    private Integer isDeleted;
 
 }

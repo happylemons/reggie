@@ -13,10 +13,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Employee implements Serializable {
+public class Employee  {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private Long id;
 

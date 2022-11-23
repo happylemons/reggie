@@ -2,6 +2,7 @@ package com.emilia.reggie.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.emilia.reggie.common.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.*;
@@ -13,6 +14,7 @@ import java.io.IOException;
 
 //完善登录功能,启动类需要扫包才能生效
 @WebFilter("/*") //声明本类为过滤器
+@Slf4j
 public class LoginCheckFilter implements Filter {
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
@@ -29,11 +31,17 @@ public class LoginCheckFilter implements Filter {
         String requestURI = req.getRequestURI();
 
         //3.白名单,无需登录也可以访问的静态页面
-        String[] uris = {"/backend/**", "/front/**", "/employee/login","/common/**"};
+        String[] uris = {"/backend/**", "/front/**", "/employee/login","/user/login","/user/sendMsg"};
 
         boolean match = checkUri(requestURI, uris);
         if (match) {
             chain.doFilter(req, resp);
+            return;
+        }
+
+        if(req.getSession().getAttribute("user") != null){
+            log.info("用户已登录，用户id为：{}",req.getSession().getAttribute("user"));
+            chain.doFilter(req,resp);
             return;
         }
 
