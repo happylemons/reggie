@@ -7,7 +7,7 @@ COPY reggie-take-out/pom.xml reggie-take-out/pom.xml
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C dependency:resolve dependency:resolve-plugins
 COPY reggie-take-out/src reggie-take-out/src
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C package -DskipTests=true
-RUN mv reggie-take-out/target/${PROJECT_NAME}.jar reggie-take-out/target/application.jar
+RUN mv reggie-take-out/target/reggie-take-out.jar reggie-take-out/target/application.jar
 
 
 FROM eclipse-temurin:17.0.5_8-jre-alpine as builder
