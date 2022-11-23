@@ -59,7 +59,7 @@ public class DishServiceImpl implements DishService {
 
         dishDao.addDish(dish);
 
-        ArrayList<DishFlavor> dishFlavors = new ArrayList<>();
+        ArrayList<DishFlavor> flavors = new ArrayList<>();
         List<DishFlavorVo> flavorVos = dishVo.getFlavors();
         for (DishFlavorVo flavor : flavorVos) {
             DishFlavor dishFlavor = new DishFlavor();
@@ -71,10 +71,10 @@ public class DishServiceImpl implements DishService {
             dishFlavor.setCreateUser(dish.getCreateUser());
             dishFlavor.setUpdateUser(dish.getUpdateUser());
             dishFlavor.setIsDeleted(0);
-            dishFlavors.add(dishFlavor);
+            flavors.add(dishFlavor);
         }
 
-        dishFlavorDao.addDishFlavor(dishFlavors);
+        dishFlavorDao.addDishFlavor(flavors);
     }
 
     @Override
@@ -103,17 +103,32 @@ public class DishServiceImpl implements DishService {
     public R<DishVo> findById(Long id) {
 
         Dish dish = dishDao.findByIdToPojo(id);
+        List<DishFlavor> dishFlavorList = dishFlavorDao.findByDishId(id);
+
         DishVo dishVo = new DishVo();
         BeanUtils.copyProperties(dish, dishVo);
-
-        List<DishFlavor> dishFlavorList = dishFlavorDao.findByDishId(id);
         List<DishFlavorVo> dishFlavorVoList = dishVo.getFlavors();
-        BeanUtils.copyProperties(dishFlavorList, dishFlavorVoList);
+
+        for (DishFlavor flavor : dishFlavorList) {
+
+            DishFlavorVo flavorVo = new DishFlavorVo();
+
+            flavorVo.setDishId(flavor.getDishId());
+            flavorVo.setName(flavor.getName());
+            flavorVo.setValue(flavor.getValue());
+            flavorVo.setIsDeleted(flavor.getIsDeleted());
+            dishFlavorVoList.add(flavorVo);
+        }
+        //BeanUtils.copyProperties(dishFlavorList, dishFlavorVoList);
+
+        dishVo.setFlavors(dishFlavorVoList);
+
 
         return R.success(dishVo);
     }
 
     @Override
+    @Transactional
     public void update(DishVo dishVo) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishVo, dish);
@@ -127,19 +142,23 @@ public class DishServiceImpl implements DishService {
 
         dishFlavorDao.deleteByDishId(dish.getId());
 
-        ArrayList<DishFlavor> dishFlavors = new ArrayList<>();
+        List<DishFlavor> flavors = new ArrayList<>();
         List<DishFlavorVo> flavorVos = dishVo.getFlavors();
-        for (DishFlavorVo flavor : flavorVos) {
-            DishFlavor dishFlavor = new DishFlavor();
-            dishFlavor.setDishId(dish.getId());
-            dishFlavor.setName(flavor.getName());
-            dishFlavor.setValue(flavor.getValue());
-            dishFlavor.setUpdateTime(LocalDateTime.now());
-            dishFlavor.setUpdateUser(dish.getUpdateUser());
-            dishFlavor.setIsDeleted(0);
-            dishFlavors.add(dishFlavor);
+        if (flavorVos != null) {
+            for (DishFlavorVo flavor : flavorVos) {
+                DishFlavor dishFlavor = new DishFlavor();
+                dishFlavor.setDishId(dish.getId());
+                dishFlavor.setName(flavor.getName());
+                dishFlavor.setValue(flavor.getValue());
+                dishFlavor.setUpdateTime(LocalDateTime.now());
+                dishFlavor.setCreateTime(LocalDateTime.now());
+                dishFlavor.setCreateUser(dishVo.getCreateUser());
+                dishFlavor.setUpdateUser(dish.getUpdateUser());
+                dishFlavor.setIsDeleted(0);
+                flavors.add(dishFlavor);
+            }
+            dishFlavorDao.addDishFlavor(flavors);
         }
-        dishFlavorDao.addDishFlavor(dishFlavors);
     }
 
     @Override

@@ -7,13 +7,11 @@
 
     <insert id="addDishFlavor">
         insert into dish_flavor values
-            <foreach collection="flavors" item="flavor" separator=",">
-                (null,#{flavor.dishId},#{flavor.name},#{flavor.value},
-                 #{flavor.createTime},#{flavor.updateTime},#{flavor.createUser},
-                 #{flavor.updateUser},0)
-            </foreach>
-
+        <foreach collection="flavors" item="flavor" separator=",">
+            (null,#{flavor.dishId},#{flavor.name},#{flavor.value},#{flavor.createTime},#{flavor.updateTime},#{flavor.createUser},#{flavor.updateUser},0)
+        </foreach>
     </insert>
+
     <select id="findByDishId" resultType="com.emilia.reggie.model.entity.DishFlavor">
         select * from dish_flavor where dish_id = #{id}
     </select>

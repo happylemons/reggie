@@ -43,9 +43,9 @@ public class DishController {
     @PutMapping
     public R updateDish(@RequestBody DishVo dishVo, HttpSession session) {
 
-        Long empId = (Long) session.getAttribute("employee");
+        Long employeeId = (Long) session.getAttribute("employeeId");
         //2. 补全
-        dishVo.setUpdateUser(empId);
+        dishVo.setUpdateUser(employeeId);
 
         dishService.update(dishVo);
         //4. 返回结果
