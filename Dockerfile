@@ -4,7 +4,7 @@ WORKDIR /var/www/application
 ENV MAVEN_OPTS='-Xms512m -Xmx1024m -Xss2m'
 COPY pom.xml pom.xml
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C dependency:resolve dependency:resolve-plugins
-COPY src src
+COPY reggie-take-out reggie-take-out
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C package -DskipTests=true
 RUN mv target/${PROJECT_NAME}.jar target/application.jar
 
