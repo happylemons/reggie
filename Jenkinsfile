@@ -77,6 +77,8 @@ def runNode(ipAddress){
                     --net host \
                     --name ${PROJECT_NAME} \
                     -e server.port=${PROJECT_PORT_VALUE} \
+                    -e reggie.path=/var/lib/reggie \
+                    -v /var/lib/reggie:/var/lib/reggie \
                     harbor.happylemon.life/${PROJECT_GROUP_VALUE}/${PROJECT_NAME}:${BUILD_NUMBER};
             EOF
         """.stripIndent()
