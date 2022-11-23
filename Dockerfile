@@ -6,12 +6,12 @@ COPY pom.xml pom.xml
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C dependency:resolve dependency:resolve-plugins
 COPY reggie-take-out reggie-take-out
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C package -DskipTests=true
-RUN mv target/${PROJECT_NAME}.jar target/application.jar
+RUN mv reggie-take-out/target/${PROJECT_NAME}.jar reggie-take-out/target/application.jar
 
 
 FROM eclipse-temurin:17.0.5_8-jre-alpine as builder
 WORKDIR /var/www/application
-COPY --from=compile /var/www/application/target/application.jar application.jar
+COPY --from=compile /var/www/application/reggie-take-out/target/application.jar application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 
