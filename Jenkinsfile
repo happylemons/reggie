@@ -26,7 +26,7 @@ pipeline {
                     stages{
                         stage("Build Image"){
                             steps{
-                                sh "docker build -qt harbor.happylemon.life/${PROJECT_GROUP_VALUE}/${PROJECT_NAME}:${BUILD_NUMBER} reggie-take-out "
+                                sh "docker build -qt harbor.happylemon.life/${PROJECT_GROUP_VALUE}/${PROJECT_NAME}:${BUILD_NUMBER} ."
                             }
                         }
 
