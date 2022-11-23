@@ -1,0 +1,6 @@
+*
+!src/
+!pom.xml
+!Dockerfile
+!reggie-take-out
+!docker-entrypoint.sh
