@@ -1,5 +1,5 @@
 def NODE_IP_ADDRESSES = ['192.168.13.1']
-def PROJECT_PORT = "30001"
+def PROJECT_PORT = "30002"
 def SECRET_TOKEN = "65595bb0-f8f5-4097-b67b-fbedc0d806ca"
 def PROJECT_GROUP = "pub"
 pipeline {

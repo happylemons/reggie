@@ -1,5 +1,5 @@
 FROM maven:3.8.6-eclipse-temurin-17-alpine as compile
-ARG PROJECT_NAME=clash2pac
+ARG PROJECT_NAME=reggie
 WORKDIR /var/www/application
 ENV MAVEN_OPTS='-Xms512m -Xmx1024m -Xss2m'
 COPY pom.xml pom.xml
