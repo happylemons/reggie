@@ -24,7 +24,7 @@ public class PageHelperTest {
 
         PageInfo<Employee> pageInfo = new PageInfo<>(employeeList);
 
-        System.out.println("当前页："+pageInfo.getPageNum());
+        System.out.println("当前页123："+pageInfo.getPageNum());
         System.out.println("页面大小："+pageInfo.getPageSize());
         System.out.println("总页数："+pageInfo.getPages());
         System.out.println("总记录数："+pageInfo.getTotal());
