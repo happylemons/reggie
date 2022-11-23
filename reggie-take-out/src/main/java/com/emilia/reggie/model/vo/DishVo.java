@@ -2,9 +2,12 @@ package com.emilia.reggie.model.vo;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.emilia.reggie.model.entity.Dish;
+import com.emilia.reggie.model.entity.DishFlavor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,4 +51,11 @@ public class DishVo {
     private String categoryName;
 
     private Integer copies;
+
+    public DishVo(Dish dish, List<DishFlavor> flavorList){
+        BeanUtils.copyProperties(dish, this);
+        flavorList.stream()
+                .map(DishFlavorVo::new)
+                .forEach(flavors::add);
+    }
 }

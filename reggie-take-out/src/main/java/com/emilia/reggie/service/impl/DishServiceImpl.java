@@ -13,6 +13,7 @@ import com.emilia.reggie.model.vo.DishVo;
 import com.emilia.reggie.service.DishService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class DishServiceImpl implements DishService {
 
         dishDao.addDish(dish);
 
-        ArrayList<DishFlavor> dishFlavors = new ArrayList<>();
+        ArrayList<DishFlavor> flavors = new ArrayList<>();
         List<DishFlavorVo> flavorVos = dishVo.getFlavors();
         for (DishFlavorVo flavor : flavorVos) {
             DishFlavor dishFlavor = new DishFlavor();
@@ -71,10 +72,10 @@ public class DishServiceImpl implements DishService {
             dishFlavor.setCreateUser(dish.getCreateUser());
             dishFlavor.setUpdateUser(dish.getUpdateUser());
             dishFlavor.setIsDeleted(0);
-            dishFlavors.add(dishFlavor);
+            flavors.add(dishFlavor);
         }
 
-        dishFlavorDao.addDishFlavor(dishFlavors);
+        dishFlavorDao.addDishFlavor(flavors);
     }
 
     @Override
@@ -99,21 +100,18 @@ public class DishServiceImpl implements DishService {
         return R.success(pages);
     }
 
+    @SneakyThrows
     @Override
     public R<DishVo> findById(Long id) {
 
         Dish dish = dishDao.findByIdToPojo(id);
-        DishVo dishVo = new DishVo();
-        BeanUtils.copyProperties(dish, dishVo);
-
         List<DishFlavor> dishFlavorList = dishFlavorDao.findByDishId(id);
-        List<DishFlavorVo> dishFlavorVoList = dishVo.getFlavors();
-        BeanUtils.copyProperties(dishFlavorList, dishFlavorVoList);
-
-        return R.success(dishVo);
+        DishVo result = new DishVo(dish, dishFlavorList);
+        return R.success(result);
     }
 
     @Override
+    @Transactional
     public void update(DishVo dishVo) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishVo, dish);
@@ -127,19 +125,23 @@ public class DishServiceImpl implements DishService {
 
         dishFlavorDao.deleteByDishId(dish.getId());
 
-        ArrayList<DishFlavor> dishFlavors = new ArrayList<>();
+        List<DishFlavor> flavors = new ArrayList<>();
         List<DishFlavorVo> flavorVos = dishVo.getFlavors();
-        for (DishFlavorVo flavor : flavorVos) {
-            DishFlavor dishFlavor = new DishFlavor();
-            dishFlavor.setDishId(dish.getId());
-            dishFlavor.setName(flavor.getName());
-            dishFlavor.setValue(flavor.getValue());
-            dishFlavor.setUpdateTime(LocalDateTime.now());
-            dishFlavor.setUpdateUser(dish.getUpdateUser());
-            dishFlavor.setIsDeleted(0);
-            dishFlavors.add(dishFlavor);
+        if (flavorVos != null) {
+            for (DishFlavorVo flavor : flavorVos) {
+                DishFlavor dishFlavor = new DishFlavor();
+                dishFlavor.setDishId(dish.getId());
+                dishFlavor.setName(flavor.getName());
+                dishFlavor.setValue(flavor.getValue());
+                dishFlavor.setUpdateTime(LocalDateTime.now());
+                dishFlavor.setCreateTime(LocalDateTime.now());
+                dishFlavor.setCreateUser(dishVo.getCreateUser());
+                dishFlavor.setUpdateUser(dish.getUpdateUser());
+                dishFlavor.setIsDeleted(0);
+                flavors.add(dishFlavor);
+            }
+            dishFlavorDao.addDishFlavor(flavors);
         }
-        dishFlavorDao.addDishFlavor(dishFlavors);
     }
 
     @Override
