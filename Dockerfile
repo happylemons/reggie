@@ -3,8 +3,9 @@ ARG PROJECT_NAME=reggie
 WORKDIR /var/www/application
 ENV MAVEN_OPTS='-Xms512m -Xmx1024m -Xss2m'
 COPY pom.xml pom.xml
+COPY reggie-take-out/pom.xml reggie-take-out/pom.xml
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C dependency:resolve dependency:resolve-plugins
-COPY reggie-take-out reggie-take-out
+COPY reggie-take-out/src reggie-take-out/src
 RUN --mount=type=cache,target=/root/.m2,id=${PROJECT_NAME} mvn -T 1C package -DskipTests=true
 RUN mv reggie-take-out/target/${PROJECT_NAME}.jar reggie-take-out/target/application.jar
 
