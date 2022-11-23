@@ -13,6 +13,7 @@ import com.emilia.reggie.model.vo.DishVo;
 import com.emilia.reggie.service.DishService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,32 +100,14 @@ public class DishServiceImpl implements DishService {
         return R.success(pages);
     }
 
+    @SneakyThrows
     @Override
     public R<DishVo> findById(Long id) {
 
         Dish dish = dishDao.findByIdToPojo(id);
         List<DishFlavor> dishFlavorList = dishFlavorDao.findByDishId(id);
-
-        DishVo dishVo = new DishVo();
-        BeanUtils.copyProperties(dish, dishVo);
-        List<DishFlavorVo> dishFlavorVoList = dishVo.getFlavors();
-
-        for (DishFlavor flavor : dishFlavorList) {
-
-            DishFlavorVo flavorVo = new DishFlavorVo();
-
-            flavorVo.setDishId(flavor.getDishId());
-            flavorVo.setName(flavor.getName());
-            flavorVo.setValue(flavor.getValue());
-            flavorVo.setIsDeleted(flavor.getIsDeleted());
-            dishFlavorVoList.add(flavorVo);
-        }
-        //BeanUtils.copyProperties(dishFlavorList, dishFlavorVoList);
-
-        dishVo.setFlavors(dishFlavorVoList);
-
-
-        return R.success(dishVo);
+        DishVo result = new DishVo(dish, dishFlavorList);
+        return R.success(result);
     }
 
     @Override
