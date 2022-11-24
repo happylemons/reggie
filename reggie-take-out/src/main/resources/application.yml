@@ -5,8 +5,8 @@ spring:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://129.204.205.29:3306/reggie?useSSL=false
-      username: root
-      password: Xiao#1996
+      username: reggie
+      password: reggie
       db-type: com.alibaba.druid.pool.DruidDataSource
 
 
