@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emilia.reggie.dao.UserDao">
+
+    <select id="findByPhone" resultType="com.emilia.reggie.model.entity.User">
+        select * from user where phone =#{phone}
+    </select>
+
+    <insert id="add">
+        insert into user(id,phone,status) values (null,#{phone},1)
+    </insert>
+
+</mapper>
