@@ -19,4 +19,6 @@ public interface SetMealDao {
     void delete(@Param("ids") List<Long> ids);
 
     void updateStatusByIds(List<Long> ids, Integer status);
+
+    List<SetMeal> findByCategoryId(Long categoryId, Integer status);
 }

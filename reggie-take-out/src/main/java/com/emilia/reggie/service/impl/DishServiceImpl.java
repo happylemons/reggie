@@ -4,6 +4,7 @@ import com.emilia.reggie.common.R;
 import com.emilia.reggie.dao.CategoryDao;
 import com.emilia.reggie.dao.DishDao;
 import com.emilia.reggie.dao.DishFlavorDao;
+import com.emilia.reggie.exception.CustomerRelationException;
 import com.emilia.reggie.model.entity.Category;
 import com.emilia.reggie.model.entity.Dish;
 import com.emilia.reggie.model.entity.DishFlavor;
@@ -145,10 +146,31 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public R<List<Dish>> findByCategoryId(Long categoryId) {
-        List<Dish> dishes = dishDao.findByCategoryId(categoryId);
-        return R.success(dishes);
+    public R<List<DishVo>> findByCategoryId(Long categoryId, Integer status) {
+        List<Dish> dishes = dishDao.findByCategoryId(categoryId,status);
 
+        List<DishVo> dishVos = new ArrayList<>();
+        for (Dish dish : dishes) {
+            List<DishFlavor> dishFlavorList = dishFlavorDao.findByDishId(dish.getId());
+            DishVo dishVo = new DishVo(dish, dishFlavorList);
+            dishVos.add(dishVo);
+        }
+        return R.success(dishVos);
+
+    }
+
+    @Override
+    public void delete(List<Long> ids) {
+        Long count = dishDao.findByIds(ids);
+        if (count > 0) {
+            throw new CustomerRelationException("套餐在售, 请停售之后再删除!");
+        }
+        dishDao.delete(ids);
+    }
+
+    @Override
+    public void updateStatusByIds(List<Long> ids, Integer status) {
+        dishDao.updateStatusByIds(ids, status);
     }
 }
 

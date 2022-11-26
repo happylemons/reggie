@@ -37,7 +37,7 @@ public class SetMealController {
 
     //批量删除 单个删除
     @DeleteMapping
-    public R<String> delete(@RequestParam List<Long> ids){
+    public R<String> delete(@RequestParam List<Long> ids) {
         setMealService.delete(ids);
         return R.success("删除成功");
 
@@ -45,11 +45,15 @@ public class SetMealController {
 
     //批量停售
     @PostMapping("status/{status}")
-    public R<String> updateStatus(@RequestParam List<Long> ids,@PathVariable Integer status){
-        setMealService.updateStatusByIds(ids,status);
+    public R<String> updateStatus(@RequestParam List<Long> ids, @PathVariable Integer status) {
+        setMealService.updateStatusByIds(ids, status);
         return R.success("修改成功");
     }
 
+    @GetMapping("list")
+    public R<List<SetMeal>> list(Long categoryId, Integer status) {
+        return setMealService.list(categoryId, status);
+    }
 
 
 }

@@ -1,7 +1,5 @@
 package com.emilia.reggie.filter;
 
-import com.alibaba.fastjson.JSON;
-import com.emilia.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
 
@@ -31,39 +29,53 @@ public class LoginCheckFilter implements Filter {
         String requestURI = req.getRequestURI();
 
         //3.白名单,无需登录也可以访问的静态页面
-        String[] uris = {"/backend/**", "/front/**", "/employee/login", "/user/login", "/user/sendMsg"};
+        String[] uris = {
+                "/backend/**",
+                "/employee/login",
+                "/user/login",
+                "/user/sendMsg",
+                "/front/fonts/**",
+                "/front/login/**"
+
+        };
 
         boolean match = checkUri(requestURI, uris);
+
         if (match) {
             chain.doFilter(req, resp);
             return;
         }
-
-        if (req.getSession().getAttribute("user") != null) {
-            log.info("用户已登录，用户id为：{}", req.getSession().getAttribute("user"));
-            chain.doFilter(req, resp);
-            return;
+        if(requestURI.contains("front")){
+            if (req.getSession().getAttribute("userId") == null) {
+                resp.sendRedirect("/front/login/index.html");
+                return;
+            }
+            if (req.getSession().getAttribute("userId") != null) {
+                log.info("用户已登录，用户id为：{}", req.getSession().getAttribute("userId"));
+                chain.doFilter(req, resp);
+                return;
+            }
         }
-
-
 
         //4.需要登录之后才可以访问,拿到登录的数据
         HttpSession session = req.getSession();
         Long employeeId = (Long) session.getAttribute("employeeId");
+
+
         if (employeeId != null) {
             //4.1已经登录,放行
             chain.doFilter(req, resp);
             return;
         }
 
-//        resp.sendRedirect("/backend/page/login/login.html");
+        resp.sendRedirect("/backend/page/login/login.html");
 
-        //4.2  没有登录
-        //return R.error("NOTLOGIN");给前端没有登录信息的信号,但是过滤器返回的是void
-        R r = R.error("NOTLOGIN");
-        //转换成Json对象
-        String jsonString = JSON.toJSONString(r);
-        resp.getWriter().write(jsonString);//访问带有数据的页面时,判断是否登录, 如果没有登录的话, 跳转到登录页面
+//        //4.2  没有登录
+//        //return R.error("NOTLOGIN");给前端没有登录信息的信号,但是过滤器返回的是void
+//        R r = R.error("NOTLOGIN");
+//        //转换成Json对象
+//        String jsonString = JSON.toJSONString(r);
+//        resp.getWriter().write(jsonString);//访问带有数据的页面时,判断是否登录, 如果没有登录的话, 跳转到登录页面
 
     }
 

@@ -1,7 +1,6 @@
 package com.emilia.reggie.service;
 
 import com.emilia.reggie.common.R;
-import com.emilia.reggie.model.entity.Dish;
 import com.emilia.reggie.model.entity.Page;
 import com.emilia.reggie.model.vo.DishVo;
 
@@ -17,5 +16,9 @@ public interface DishService {
 
     void update(DishVo dishVo);
 
-    R<List<Dish>> findByCategoryId(Long categoryId);
+    R<List<DishVo>> findByCategoryId(Long categoryId, Integer status);
+
+    void delete(List<Long> ids);
+
+    void updateStatusByIds(List<Long> ids, Integer status);
 }

@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
-        List<Dish> dish = dishDao.findByCategoryId(id);
+        List<Dish> dish = dishDao.findByCategoryId(id,null);
         if (dish != null) {
             throw new CustomerRelationException("该类别已经被菜品关联,删除失败!");
         }
