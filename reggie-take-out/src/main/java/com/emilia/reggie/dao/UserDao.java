@@ -1,4 +1,12 @@
 package com.emilia.reggie.dao;
 
-public class UserDao {
+import com.emilia.reggie.model.entity.User;
+
+public interface UserDao {
+    User findByPhone(String phone);
+
+    void add(User user);
+
+    User findUserById(Long userId);
+
 }

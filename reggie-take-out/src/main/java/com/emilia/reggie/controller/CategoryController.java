@@ -123,7 +123,6 @@ public class CategoryController {
 
     @GetMapping("list")
     public R<List<Category>> list(Integer type) {
-
         return categoryService.list(type);
     }
 

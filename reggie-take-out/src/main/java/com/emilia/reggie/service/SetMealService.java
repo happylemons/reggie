@@ -16,4 +16,6 @@ public interface SetMealService {
     void delete(List<Long> ids);
 
     void updateStatusByIds(List<Long> ids, Integer status);
+
+    R<List<SetMeal>> list(Long categoryId, Integer status);
 }

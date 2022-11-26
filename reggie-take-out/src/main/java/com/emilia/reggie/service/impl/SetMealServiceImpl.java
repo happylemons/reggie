@@ -74,7 +74,7 @@ public class SetMealServiceImpl implements SetMealService {
     @Override
     public void delete(List<Long> ids) {
         Long count = setMealDao.findByIds(ids);
-        if(count > 0){
+        if (count > 0) {
             throw new CustomerRelationException("套餐在售, 请停售之后再删除!");
         }
         setMealDishDao.deleteBySetMealIds(ids);
@@ -83,7 +83,13 @@ public class SetMealServiceImpl implements SetMealService {
 
     @Override
     public void updateStatusByIds(List<Long> ids, Integer status) {
-        setMealDao.updateStatusByIds(ids,status);
+        setMealDao.updateStatusByIds(ids, status);
+    }
+
+    @Override
+    public R<List<SetMeal>> list(Long categoryId, Integer status) {
+        List<SetMeal> setMealList = setMealDao.findByCategoryId(categoryId, status);
+        return R.success(setMealList);
     }
 
 

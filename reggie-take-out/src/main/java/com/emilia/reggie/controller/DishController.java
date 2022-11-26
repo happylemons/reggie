@@ -1,7 +1,6 @@
 package com.emilia.reggie.controller;
 
 import com.emilia.reggie.common.R;
-import com.emilia.reggie.model.entity.Dish;
 import com.emilia.reggie.model.entity.Page;
 import com.emilia.reggie.model.vo.DishVo;
 import com.emilia.reggie.service.DishService;
@@ -53,7 +52,24 @@ public class DishController {
     }
 
     @GetMapping("list")
-    public R<List<Dish>> list(Long categoryId) {
-        return dishService.findByCategoryId(categoryId);
+    public R<List<DishVo>> list(Long categoryId, Integer status) {
+        return dishService.findByCategoryId(categoryId,status);
     }
+
+
+    //批量停售
+    @PostMapping("status/{status}")
+    public R<String> updateStatus(@RequestParam List<Long> ids, @PathVariable Integer status) {
+        dishService.updateStatusByIds(ids, status);
+        return R.success("修改成功");
+    }
+    //批量删除 单个删除
+    @DeleteMapping
+    public R<String> delete(@RequestParam List<Long> ids) {
+        dishService.delete(ids);
+        return R.success("删除成功");
+
+    }
+
+
 }
