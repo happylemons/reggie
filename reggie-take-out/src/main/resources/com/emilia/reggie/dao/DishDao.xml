@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emilia.reggie.dao.DishDao">
+
+    <select id="findByCategoryId" resultType="com.emilia.reggie.model.entity.Dish">
+        select * from dish where category_id = #{id}
+        <if test="status != null">
+            and status = #{status}
+        </if>
+    </select>
+
+    <!-- useGeneratedKeys="true" keyColumn="id" keyProperty="id" 通知mybatis插入数据之后, 主键封装回对象
+    keyColumn  主键列名
+    keyProperty  主键的属性名
+    -->
+    <insert id="addDish" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into dish values (null,#{name},#{categoryId},#{price},#{code},#{image},#{description},#{status},#{sort},#{createTime}
+        ,#{updateTime},#{createUser},#{updateUser},0);
+    </insert>
+
+    <select id="findByName" resultType="com.emilia.reggie.model.entity.Dish">
+        select * from dish
+        <where>
+            <if test="name != null and name !=''">
+                name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findByIdToPojo" resultType="com.emilia.reggie.model.entity.Dish">
+        select * from dish where id = #{id}
+    </select>
+
+    <update id="updateDish">
+        update dish
+        <set>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="categoryId!=null">
+                category_id=#{categoryId},
+            </if>
+            <if test="price!=null">
+                price=#{price},
+            </if>
+            <if test="code!=null and code!=''">
+                code=#{code},
+            </if>
+            <if test="image!=null and image!=''">
+                image=#{image},
+            </if>
+            <if test="description!=null and description!=''">
+                description=#{description},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="sort!=null">
+                sort=#{sort},
+            </if>
+            <if test="updateTime!=null">
+                update_time=#{updateTime},
+            </if>
+            <if test="updateUser!=null">
+                update_user=#{updateUser},
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
+    <sql id="ids">
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </sql>
+
+    <select id="findByIds" resultType="java.lang.Long">
+        select count(*) from dish where dish.status = 1 and id in
+          <include refid="ids"/>
+    </select>
+
+    <delete id="delete">
+        delete from dish where id in
+        <include refid="ids"/>
+    </delete>
+
+    <update id="updateStatusByIds">
+        update dish set status = #{status} where id in
+        <include refid="ids"/>
+    </update>
+
+</mapper>

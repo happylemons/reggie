@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emilia.reggie.dao.ShoppingCartDao">
+
+    <select id="findByUserIdWithDidOrSid" resultType="com.emilia.reggie.model.entity.ShoppingCart">
+        select * from shopping_cart
+        <where>
+            user_id = #{userId}
+            <if test="dishId != null">
+                and dish_id = #{dishId}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        insert into shopping_cart
+        values (null, #{name}, #{image}, #{userId}, #{dishId}, #{setmealId}, #{dishFlavor}, 1, #{amount}, now())
+    </insert>
+
+
+    <update id="update">
+        update shopping_cart set number = #{number} where id = #{id}
+    </update>
+
+    <select id="findByUserId" resultType="com.emilia.reggie.model.entity.ShoppingCart">
+        select * from shopping_cart where user_id = #{userId}
+    </select>
+    <delete id="clean">
+        delete from shopping_cart where user_id = #{userId}
+    </delete>
+    <delete id="delete">
+        delete from shopping_cart <where>
+        user_id = #{userId}
+        <if test="dishId != null">
+            and dish_id = #{dishId}
+        </if>
+        <if test="setmealId != null">
+            and setmeal_id = #{setmealId}
+        </if>
+    </where>
+    </delete>
+
+
+</mapper>
