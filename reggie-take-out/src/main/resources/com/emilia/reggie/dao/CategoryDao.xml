@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emilia.reggie.dao.CategoryDao">
+
+
+    <insert id="add">
+        insert into category values (null,#{type},#{name},#{sort},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+
+
+    <select id="findByName" resultType="com.emilia.reggie.model.entity.Category">
+        select * from category where name = #{name}
+    </select>
+
+    <select id="findAll" resultType="com.emilia.reggie.model.entity.Category">
+        select * from category
+    </select>
+
+    <delete id="delete">
+        delete from category where id =#{id}
+    </delete>
+
+    <update id="update">
+        update category set name=#{name},sort=#{sort},update_time=#{updateTime},update_user=#{updateUser} where id=#{id}
+    </update>
+
+    <select id="list" resultType="com.emilia.reggie.model.entity.Category">
+        select * from category
+        <where>
+            <if test="type!=null">
+                type=#{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultType="com.emilia.reggie.model.entity.Category">
+        select * from category where id =#{categoryId}
+    </select>
+
+
+</mapper>

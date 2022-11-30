@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emilia.reggie.dao.OrderDao">
+
+
+    <insert id="save">
+        insert into orders
+        values (#{id}, #{number}, #{status}, #{userId}, #{addressBookId}, #{orderTime}, null, #{payMethod}, #{amount},
+                #{remark}, #{phone}, #{address}, #{userName}, #{consignee})
+    </insert>
+    <select id="findByUserId" resultType="com.emilia.reggie.model.entity.Orders">
+        select * from orders where user_id = #{userId}
+    </select>
+</mapper>
