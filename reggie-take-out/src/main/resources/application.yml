@@ -8,6 +8,10 @@ spring:
       username: root
       password: Xiao#1996
       db-type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    username: root
+    password: Xiao#1996
+    host: 129.204.205.29
 
 
 mybatis-plus:

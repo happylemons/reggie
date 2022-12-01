@@ -88,7 +88,7 @@
         <include refid="ids"/>
     </delete>
 
-    <update id="updateStatusByIds">
+    <update id="updateStatusByIds" >
         update dish set status = #{status} where id in
         <include refid="ids"/>
     </update>

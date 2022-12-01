@@ -17,12 +17,16 @@ import com.github.pagehelper.PageInfo;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +42,8 @@ public class DishServiceImpl implements DishService {
     @Autowired(required = false)
     private CategoryDao categoryDao;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public void addDish(DishVo dishVo) {
@@ -77,27 +83,35 @@ public class DishServiceImpl implements DishService {
         }
 
         dishFlavorDao.addDishFlavor(flavors);
+
+        Set keys = redisTemplate.keys("dish_*");
+        Assert.notEmpty(keys, "添加的参数不能为空");
+        redisTemplate.delete(keys);
     }
 
     @Override
     public R<Page<DishVo>> findByPage(Integer page, Integer pageSize, String name) {
         //1.设置页面大小
         PageHelper.startPage(page, pageSize);
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Page<DishVo> pages = (Page<DishVo>) valueOperations.get("pages");
+        if (pages == null) {
+            //2.根据名字查询菜品的列表
+            List<Dish> dishList = dishDao.findByName(name);
 
-        //2.根据名字查询菜品的列表
-        List<Dish> dishList = dishDao.findByName(name);
-
-        //3.
-        PageInfo<Dish> pageInfo = new PageInfo<>(dishList);
-        List<DishVo> dishVoList = dishList.stream().map(dish -> {
-            DishVo dishVo = new DishVo();
-            //属性拷贝，把dish的属性值拷贝dishvo里面
-            BeanUtils.copyProperties(dish, dishVo);
-            Category category = categoryDao.findById(dish.getCategoryId());
-            dishVo.setCategoryName(category.getName());
-            return dishVo;
-        }).collect(Collectors.toList());
-        Page<DishVo> pages = new Page<>(dishVoList, pageInfo.getTotal(), pageSize, page);
+            //3.
+            PageInfo<Dish> pageInfo = new PageInfo<>(dishList);
+            List<DishVo> dishVoList = dishList.stream().map(dish -> {
+                DishVo dishVo = new DishVo();
+                //属性拷贝，把dish的属性值拷贝dishvo里面
+                BeanUtils.copyProperties(dish, dishVo);
+                Category category = categoryDao.findById(dish.getCategoryId());
+                dishVo.setCategoryName(category.getName());
+                return dishVo;
+            }).collect(Collectors.toList());
+            pages = new Page<>(dishVoList, pageInfo.getTotal(), pageSize, page);
+            redisTemplate.opsForValue().set("pages",pages);
+        }
         return R.success(pages);
     }
 
@@ -143,19 +157,28 @@ public class DishServiceImpl implements DishService {
             }
             dishFlavorDao.addDishFlavor(flavors);
         }
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
     }
 
     @Override
     public R<List<DishVo>> findByCategoryId(Long categoryId, Integer status) {
-        List<Dish> dishes = dishDao.findByCategoryId(categoryId,status);
 
-        List<DishVo> dishVos = new ArrayList<>();
-        for (Dish dish : dishes) {
-            List<DishFlavor> dishFlavorList = dishFlavorDao.findByDishId(dish.getId());
-            DishVo dishVo = new DishVo(dish, dishFlavorList);
-            dishVos.add(dishVo);
+        List<DishVo> dishVos = (List<DishVo>) redisTemplate.opsForValue().get("dish_" + categoryId + "_" + status);
+        if (dishVos == null) {
+            List<DishVo> dishVos1 = new ArrayList<>();
+            List<Dish> dishes = dishDao.findByCategoryId(categoryId, status);
+
+            for (Dish dish : dishes) {
+                List<DishFlavor> dishFlavorList = dishFlavorDao.findByDishId(dish.getId());
+                DishVo dishVo = new DishVo(dish, dishFlavorList);
+                dishVos1.add(dishVo);
+            }
+            redisTemplate.opsForValue().set("dish_" + categoryId + "_" + status, dishVos1);
+            return R.success(dishVos1);
         }
         return R.success(dishVos);
+
 
     }
 
@@ -171,6 +194,8 @@ public class DishServiceImpl implements DishService {
     @Override
     public void updateStatusByIds(List<Long> ids, Integer status) {
         dishDao.updateStatusByIds(ids, status);
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
     }
 }
 

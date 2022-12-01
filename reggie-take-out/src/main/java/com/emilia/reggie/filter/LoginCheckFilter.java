@@ -45,16 +45,15 @@ public class LoginCheckFilter implements Filter {
             chain.doFilter(req, resp);
             return;
         }
-        if(requestURI.contains("front")){
-            if (req.getSession().getAttribute("userId") == null) {
-                resp.sendRedirect("/front/login/index.html");
-                return;
-            }
-            if (req.getSession().getAttribute("userId") != null) {
-                log.info("用户已登录，用户id为：{}", req.getSession().getAttribute("userId"));
-                chain.doFilter(req, resp);
-                return;
-            }
+
+//        if (req.getSession().getAttribute("userId") == null) {
+//            resp.sendRedirect("/front/login/index.html");
+//            return;
+//        }
+        if (req.getSession().getAttribute("userId") != null) {
+            log.info("用户已登录，用户id为：{}", req.getSession().getAttribute("userId"));
+            chain.doFilter(req, resp);
+            return;
         }
 
         //4.需要登录之后才可以访问,拿到登录的数据
