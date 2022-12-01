@@ -13,6 +13,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,8 @@ public class SetMealServiceImpl implements SetMealService {
 
 
     @Override
+    @CacheEvict(value = "setmeal", allEntries = true)//清除该名称空间下的所有数据
+    //是否删除缓存中的所有条目。默认情况下，仅删除关联键下的值。请注意，不允许将此参数设置为true并指定key。
     public void add(SetMealVo setMealVo) {
         SetMeal setMeal = new SetMeal();
         BeanUtils.copyProperties(setMealVo, setMeal);
@@ -72,6 +76,7 @@ public class SetMealServiceImpl implements SetMealService {
     }
 
     @Override
+    @CacheEvict(value = "setmeal" , allEntries = true)
     public void delete(List<Long> ids) {
         Long count = setMealDao.findByIds(ids);
         if (count > 0) {
@@ -87,12 +92,11 @@ public class SetMealServiceImpl implements SetMealService {
     }
 
     @Override
+    @Cacheable(value = "setmeal", key = "#categoryId + '_' + #status")//多个参数作为key, 语法: #参数一 +'_' + 参数二
     public R<List<SetMeal>> list(Long categoryId, Integer status) {
         List<SetMeal> setMealList = setMealDao.findByCategoryId(categoryId, status);
         return R.success(setMealList);
     }
-
-
 }
 
 

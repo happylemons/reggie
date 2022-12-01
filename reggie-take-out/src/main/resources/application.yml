@@ -12,6 +12,9 @@ spring:
     username: root
     password: Xiao#1996
     host: 129.204.205.29
+  cache:
+    redis:
+      time-to-live: 1800000 #单位是毫秒, 设置缓存过期的时间
 
 
 mybatis-plus:
